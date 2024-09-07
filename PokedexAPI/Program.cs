@@ -53,6 +53,5 @@ static void ConfigureServices(IServiceCollection services)
     //                                EndpointsOptions.Endpoints));
     //Used to create a new instance of the service every time we need it
     services.AddTransient<IPokemonService, PokemonService>();
-    services.AddTransient<ITranslateService, TranslateService>();
     //services.AddTransient
 }

@@ -18,7 +18,7 @@ namespace PokemonAPI_Test
     public class GlobalExceptionHandlerTests
     {
         [Fact]
-        public async Task TryHandleAsync_ShouldLogErrorAndReturnProblemDetails_WhenExceptionIsThrown()
+        public async Task TryHandleAsync_ShouldLogReturnProblemDetails_WhenExceptionIsThrown_SC500()
         {
             // Arrange
             var loggerMock = new Mock<ILogger<GlobalExceptionHandler>>();
@@ -57,4 +57,4 @@ namespace PokemonAPI_Test
             Assert.Equal("Server Error", problemDetails.Type);
         }
     }
-}
+} 
