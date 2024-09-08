@@ -11,7 +11,8 @@ namespace PokedexAPI.Services.Utils
         /// <summary>
         /// For getting the resources from a web api
         /// </summary>
-        /// <param name="url">API Url</param>
+        /// <param name="apiUrl">API Url</param>
+        /// <param name="queryParams">query params to add to the request</param>
         /// <returns>A Task with result object of type T</returns>
         public static async Task<T?> Get<T>(string apiUrl, Dictionary<string, string>? queryParams = null)
         {
@@ -24,7 +25,7 @@ namespace PokedexAPI.Services.Utils
                     {
                         query[item.Key] = item.Value;
                     }
-                    apiUrl += query.ToString();
+                    apiUrl += "?" + query.ToString();
                 }
 
                 var response = httpClient.GetAsync(new Uri(apiUrl)).Result;
@@ -55,8 +56,9 @@ namespace PokedexAPI.Services.Utils
         /// For creating a new item over a web api using POST
         /// </summary>
         /// <param name="apiUrl">API Url</param>
-        /// <param name="postObject">The object to be created</param>
-        /// <returns>A Task with created item</returns>
+        /// <param name="queryParams">query params to add to the request</param>
+        /// <param name="postObject">The object to be passed as payload</param>
+        /// <returns>A Task with request result</returns>
         public static async Task<T> PostRequest<T>(string apiUrl, Dictionary<string, string>? queryParams = null, object? postObject = null)
         {
             using (var client = new HttpClient())
@@ -90,21 +92,6 @@ namespace PokedexAPI.Services.Utils
                 });
                 return result;
             }            
-        }
-
-        /// <summary>
-        /// For updating an existing item over a web api using PUT
-        /// </summary>
-        /// <param name="apiUrl">API Url</param>
-        /// <param name="putObject">The object to be edited</param>
-        public static async Task PutRequest<T>(string apiUrl, T putObject)
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.PutAsync(apiUrl, putObject, new JsonMediaTypeFormatter()).ConfigureAwait(false);
-
-                response.EnsureSuccessStatusCode();
-            }
         }
     }
 }

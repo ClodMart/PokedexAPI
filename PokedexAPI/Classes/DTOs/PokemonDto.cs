@@ -1,4 +1,6 @@
-﻿namespace PokedexAPI.Classes.DTOs
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace PokedexAPI.Classes.DTOs
 {
     [Serializable]
     public class PokemonDto(Pokemon pokemon, PokemonSpecies species)

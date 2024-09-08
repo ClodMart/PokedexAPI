@@ -1,11 +1,9 @@
 ﻿namespace PokedexAPI.Classes
 {
-    //Class used to load endpoint configuration from configs.json
-    public class EndpointsOptions
+    //Class used to load endpoint configuration from appsettings
+    public class ExternalUris
     {
-        public const string Endpoints = "Endpoints";
-
-        public string PokemonApiBaseUri { get; set; }
-        public string TranslateApiBaseUri { get; set; }
+        public string BasePokemonUri { get; set; }
+        public string TranslateBaseUri { get; set; }
     }
 }

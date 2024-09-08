@@ -5,30 +5,34 @@ using Moq;
 using PokedexAPI.Classes.DTOs;
 using PokedexAPI.Controllers;
 using PokedexAPI.Services.Interfaces;
+using PokemonAPI_Test.Services;
 using System.Net;
 
 namespace PokemonAPI_Test
 {
     public class TestPokemonController
     {
-        [Fact]
-        public async Task GetPokemonInfo_OnSuccess_InvokesPokemonServiceOnce()
+        [Theory]
+        [InlineData("ditto")]
+        [InlineData("kyogre")]
+        public async Task GetPokemonInfo_OnSuccess_InvokesPokemonServiceOnce(string name)
         {
             //Arrange
             var mockPokemonService = new Mock<IPokemonService>();
-            mockPokemonService.Setup(service => service.GetPokemon("ditto", false));
 
             var controller = new PokemonController(mockPokemonService.Object);
+            //mockPokemonService.Setup(service => service.GetPokemon(name, false));
 
             //Act
-            var result = await controller.GetPokemonInfo("ditto");
-
+            await controller.GetPokemonInfo(name);
+      
             //Assert
-            mockPokemonService.Verify(service => service.GetPokemon("ditto", false), Times.Once);
+            mockPokemonService.Verify(service => service.GetPokemon(name, false), Times.Once);
         }
 
         [Theory]
         [InlineData("ditto", HttpStatusCode.OK)]
+        [InlineData("kyogre", HttpStatusCode.OK)]
         public async Task GetPokemonInfo_OnSuccess_Return_SC200(string pokemonName, HttpStatusCode expected)
         {
             //Arrange
@@ -36,7 +40,7 @@ namespace PokemonAPI_Test
             var controller = new PokemonController(mockPokemonService.Object);
 
             //Act
-            var result = (ActionResult<PokemonDto>)await controller.GetPokemonInfo(pokemonName);
+            var result = await controller.GetPokemonInfo(pokemonName);
 
             //Get StatusCode from IActionResult
             IConvertToActionResult convertToActionResult = result;
@@ -47,24 +51,24 @@ namespace PokemonAPI_Test
         }
 
 
-        [Fact]
-        public async Task GetPokemonTranslated_OnSuccess_InvokesPokemonServiceOnce()
+        [Theory]
+        [InlineData("ditto")]
+        [InlineData("kyogre")]
+        public async Task GetPokemonTranslated_OnSuccess_InvokesPokemonServiceOnceAndTranslatesBasedOnHabitatOrLegendary(string name)
         {
             //Arrange
             var mockPokemonService = new Mock<IPokemonService>();
-            mockPokemonService.Setup(service => service.GetPokemon("ditto", true));
-
             var controller = new PokemonController(mockPokemonService.Object);
 
             //Act
-            var result = await controller.GetPokemonTranslated("ditto");
-
+            var result = await controller.GetPokemonTranslated(name);
             //Assert
-            mockPokemonService.Verify(service => service.GetPokemon("ditto", true), Times.Once);
+            mockPokemonService.Verify(service => service.GetPokemon(name, true), Times.Once);
         }
 
         [Theory]
         [InlineData("ditto", HttpStatusCode.OK)]
+        [InlineData("kyogre", HttpStatusCode.OK)]
         public async Task GetPokemonTranslated_OnSuccess_Return_SC200(string pokemonName, HttpStatusCode expected)
         {
             //Arrange
@@ -72,7 +76,7 @@ namespace PokemonAPI_Test
             var controller = new PokemonController(mockPokemonService.Object);
 
             //Act
-            var result = (ActionResult<PokemonDto>)await controller.GetPokemonTranslated(pokemonName);
+            var result = await controller.GetPokemonTranslated(pokemonName);
 
             //Get StatusCode from IActionResult
             IConvertToActionResult convertToActionResult = result;

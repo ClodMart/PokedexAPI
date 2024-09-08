@@ -4,6 +4,8 @@ using Microsoft.Win32.SafeHandles;
 using PokedexAPI.Classes;
 using PokedexAPI.Handlers;
 using PokedexAPI.Services;
+using PokedexAPI.Services.DataRepositories;
+using PokedexAPI.Services.DataRepositories.Interfaces;
 using PokedexAPI.Services.Interfaces;
 using System.Configuration;
 
@@ -18,6 +20,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+builder.Services.Configure<ExternalUris>(builder.Configuration.GetSection("ExternalUris"));
 
 //Inizialize global exception handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -42,16 +48,7 @@ app.Run();
 
 static void ConfigureServices(IServiceCollection services)
 {
-    //Using microsoft extension configuration to inject config.json data 
-    //var basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-    //IConfigurationRoot Configuration = new ConfigurationBuilder()
-    //        .SetBasePath(basePath ?? "")
-    //        .AddJsonFile("appsettings.json")
-    //        .Build();
-    
-    //services.Configure<EndpointsOptions>(Configuration.GetSection(
-    //                                EndpointsOptions.Endpoints));
     //Used to create a new instance of the service every time we need it
+    services.AddTransient<IPokemonDataRepository, PokemonDataRepository>();
     services.AddTransient<IPokemonService, PokemonService>();
-    //services.AddTransient
 }
